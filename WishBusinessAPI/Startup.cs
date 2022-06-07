@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WishBusinessAPI.Repositories.UserRepository;
 
 namespace WishBusinessAPI
 {
@@ -28,6 +29,7 @@ namespace WishBusinessAPI
         {
 
             services.AddControllers();
+            services.AddScoped < IUserRepository, UserRepository > ();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WishBusinessAPI", Version = "v1" });
