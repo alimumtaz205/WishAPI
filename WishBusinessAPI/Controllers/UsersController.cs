@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using WishBusinessAPI.Common;
+using WishBusinessAPI.Models;
 using WishBusinessAPI.Models.Response;
 using WishBusinessAPI.Repositories.UserRepository;
 
@@ -19,7 +20,7 @@ namespace WishBusinessAPI.Controllers
             _userRepository = userRepository;
         }
 
-        [Route("action")]
+        [Route("GetUser")]
         [HttpGet]
         public async Task<IActionResult> GetUser()
         {
@@ -32,10 +33,29 @@ namespace WishBusinessAPI.Controllers
             {
                 response.isSuccess = false;
                 response.Message = ex.Message.ToString();
+                response.tranCodes = tranCodes;
                // response.tranCodes = Convert.ToString((int)tranCodes.Exception);
             }
 
             return Ok(response);
+        }
+
+        [Route("RegisterUser")]
+        [HttpPost]
+        public async Task<IActionResult> RegisterUser([FromBody] User user)
+        {
+            GetUserResponse res=new GetUserResponse();
+            try
+            {
+                res = _userRepository.RegisterUser(user);
+            }
+            catch (Exception ex)
+            {
+                res.isSuccess = false;
+                res.Message = ex.Message.ToString();
+                res.tranCodes = tranCodes;
+            }
+            return Ok(res);
         }
     }
 }
