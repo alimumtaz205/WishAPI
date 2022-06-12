@@ -6,7 +6,6 @@ using System.Data;
 using WishBusinessAPI.Common;
 using WishBusinessAPI.Models;
 using WishBusinessAPI.Models.Response;
-using WishBusinessAPI.Repositories.Finance;
 
 namespace WishBusinessAPI
 {
@@ -114,74 +113,75 @@ namespace WishBusinessAPI
             return new FinanceResponse { isSuccess = isSuccess, Message = Message, tranCodes = tranCodes, Data = UserList };
         }
 
-        //public GetUserResponse RegisterUser(User user)
-        //{
-        //    /*.........................................................
-        //     PROCEDURE `PCR_USER_REGISTERATION`(
-			     //       IN `P_USERNAME` VARCHAR(1000), 
-        //                IN `P_MOBILE` VARCHAR(1000), 
-			     //       IN `P_PASSWORD` VARCHAR(1000), 
-        //                IN `P_INVCODE` VARCHAR(1000), 
-        //                OUT `PCODE` VARCHAR(20), 
-        //                OUT `PDESC` VARCHAR(1000), 
-        //                OUT `PMSG` VARCHAR(20)
-        //    )  
-        //    .......................................................*/
-        //    #region variable
-        //    DataTable dataTable = new DataTable();
-        //    MySqlCommand cmd = null;
-        //    MySqlConnection con = null;
-        //    string Message = string.Empty;
-        //    TranCodes tranCode = TranCodes.Exception;
+        public FinanceResponse AddFinance(Finance request)
+        {
+            /*.........................................................
+            PROCEDURE `PCR_FINANCE_ADD`(
+		            IN `P_USERID` VARCHAR(100), 
+                    IN `P_FINANCEID` VARCHAR(1000), 
+                    IN `P_ACCOUNT_FUNDS` VARCHAR(100), 
+                    IN `P_FROZEN_AMOUNT` VARCHAR(200), 
+                    IN `P_FINANCIAL_INCOME` VARCHAR(200), 
+                    OUT `PCODE` VARCHAR(20), 
+                    OUT `PDESC` VARCHAR(1000), 
+                    OUT `PMSG` VARCHAR(20)
+            )
+            .......................................................*/
+            #region variable
+            DataTable dataTable = new DataTable();
+            MySqlCommand cmd = null;
+            MySqlConnection con = null;
+            string Message = string.Empty;
+            TranCodes tranCode = TranCodes.Exception;
 
-        //    #endregion variable
+            #endregion variable
 
-        //    try
-        //    {
-        //        var aa = _configuration.GetConnectionString("CONN_STR");
-        //        using (cmd = new MySqlCommand("PCR_USER_REGISTERATION", con = new MySqlConnection(_configuration.GetConnectionString("DB_CONNECTION"))))
-        //        {
-        //            cmd.CommandType = CommandType.StoredProcedure;
+            try
+            {
+                var aa = _configuration.GetConnectionString("CONN_STR");
+                using (cmd = new MySqlCommand("PCR_FINANCE_ADD", con = new MySqlConnection(_configuration.GetConnectionString("DB_CONNECTION"))))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-        //            //input
-        //            cmd.Parameters.Add(new MySqlParameter { ParameterName = "P_USERNAME", Value = user.userName, MySqlDbType = MySqlDbType.VarChar, Direction = ParameterDirection.Input, Size = 100 });
-        //            cmd.Parameters.Add(new MySqlParameter { ParameterName = "P_MOBILE", Value = user.userMobile, MySqlDbType = MySqlDbType.VarChar, Direction = ParameterDirection.Input, Size = 100 });
-        //            cmd.Parameters.Add(new MySqlParameter { ParameterName = "P_PASSWORD", Value = user.userPassword, MySqlDbType = MySqlDbType.VarChar, Direction = ParameterDirection.Input, Size = 100 });
-        //            cmd.Parameters.Add(new MySqlParameter { ParameterName = "P_INVCODE", Value = user.code, MySqlDbType = MySqlDbType.VarChar, Direction = ParameterDirection.Input, Size = 100 });
+                    //input
+                    cmd.Parameters.Add(new MySqlParameter { ParameterName = "P_USERID", Value = request.userId, MySqlDbType = MySqlDbType.VarChar, Direction = ParameterDirection.Input, Size = 100 });
+                    cmd.Parameters.Add(new MySqlParameter { ParameterName = "P_FINANCEID", Value = request.financeId, MySqlDbType = MySqlDbType.VarChar, Direction = ParameterDirection.Input, Size = 100 });
+                    cmd.Parameters.Add(new MySqlParameter { ParameterName = "P_ACCOUNT_FUNDS", Value = request.accountFunds, MySqlDbType = MySqlDbType.VarChar, Direction = ParameterDirection.Input, Size = 100 });
+                    cmd.Parameters.Add(new MySqlParameter { ParameterName = "P_FROZEN_AMOUNT", Value = request.frozenAmount, MySqlDbType = MySqlDbType.VarChar, Direction = ParameterDirection.Input, Size = 100 });
+                    cmd.Parameters.Add(new MySqlParameter { ParameterName = "P_FINANCIAL_INCOME", Value = request.financialIncome, MySqlDbType = MySqlDbType.VarChar, Direction = ParameterDirection.Input, Size = 100 });
+
+                    cmd.Parameters.Add(new MySqlParameter { ParameterName = "PCODE", MySqlDbType = MySqlDbType.VarChar, Direction = ParameterDirection.Output, Size = 1000 });
+                    cmd.Parameters.Add(new MySqlParameter { ParameterName = "PDESC", MySqlDbType = MySqlDbType.VarChar, Direction = ParameterDirection.Output, Size = 1000 });
+                    cmd.Parameters.Add(new MySqlParameter { ParameterName = "PMSG", MySqlDbType = MySqlDbType.VarChar, Direction = ParameterDirection.Output, Size = 1000 });
 
 
-        //            cmd.Parameters.Add(new MySqlParameter { ParameterName = "PCODE", MySqlDbType = MySqlDbType.VarChar, Direction = ParameterDirection.Output, Size = 1000 });
-        //            cmd.Parameters.Add(new MySqlParameter { ParameterName = "PDESC", MySqlDbType = MySqlDbType.VarChar, Direction = ParameterDirection.Output, Size = 1000 });
-        //            cmd.Parameters.Add(new MySqlParameter { ParameterName = "PMSG", MySqlDbType = MySqlDbType.VarChar, Direction = ParameterDirection.Output, Size = 1000 });
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
 
+                    if (Convert.ToString(cmd.Parameters["PCODE"].Value) == "00" || Convert.ToString(cmd.Parameters["PCODE"].Value) == "0")
+                    {
+                        isSuccess = true;
+                        // tranCode = TranCodes.Success;
+                        Message = Convert.ToString(cmd.Parameters["PDESC"].Value);
+                    }
+                    else
+                    {
+                        Message = Convert.ToString(cmd.Parameters["PDESC"].Value);
+                    }
 
-        //            con.Open();
-        //            cmd.ExecuteNonQuery();
-        //            con.Close();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                if (con != null) { con.Close(); con.Dispose(); }
+            }
 
-        //            if (Convert.ToString(cmd.Parameters["PCODE"].Value) == "00" || Convert.ToString(cmd.Parameters["PCODE"].Value) == "0")
-        //            {
-        //                isSuccess = true;
-        //                // tranCode = TranCodes.Success;
-        //                Message = Convert.ToString(cmd.Parameters["PDESC"].Value);
-        //            }
-        //            else
-        //            {
-        //                Message = Convert.ToString(cmd.Parameters["PDESC"].Value);
-        //            }
-
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //        if (con != null) { con.Close(); con.Dispose(); }
-        //    }
-
-        //    return new GetUserResponse { isSuccess = isSuccess, Message = Message };
-        //}
+            return new FinanceResponse { isSuccess = isSuccess, Message = Message };
+        }
     }
 }

@@ -1,9 +1,12 @@
-﻿using WishBusinessAPI.Models.Response;
+﻿using WishBusinessAPI.Models;
+using WishBusinessAPI.Models.Response;
 
-namespace WishBusinessAPI.Repositories.Finance
+namespace WishBusinessAPI
 {
     public interface IFinanceRepository
     {
         public FinanceResponse GetFinance();
+
+        public FinanceResponse AddFinance(Finance request);
     }
 }

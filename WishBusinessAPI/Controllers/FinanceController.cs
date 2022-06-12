@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using WishBusinessAPI.Common;
+using WishBusinessAPI.Models;
 using WishBusinessAPI.Models.Response;
-using WishBusinessAPI.Repositories.Finance;
 
 namespace WishBusinessAPI.Controllers
 {
@@ -37,6 +37,25 @@ namespace WishBusinessAPI.Controllers
             }
 
             return Ok(response);
+        }
+
+
+        [Route("AddFinance")]
+        [HttpPost]
+        public async Task<IActionResult> AddFinance([FromBody] Finance request)
+        {
+            FinanceResponse res = new FinanceResponse();
+            try
+            {
+                res = _financeRepository.AddFinance(request);
+            }
+            catch (Exception ex)
+            {
+                res.isSuccess = false;
+                res.Message = ex.Message.ToString();
+                res.tranCodes = tranCodes;
+            }
+            return Ok(res);
         }
     }
 }
