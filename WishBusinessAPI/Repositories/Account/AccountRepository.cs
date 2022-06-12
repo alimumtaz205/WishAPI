@@ -13,7 +13,7 @@ namespace WishBusinessAPI.Repositories.Account
         private readonly IConfiguration _configuration;
 
         bool isSuccess = false;
-        TranCodes tranCodes = TranCodes.Exception;
+        TranCodes tranCode = TranCodes.Exception;
         string Message = string.Empty;
 
         public AccountRepository(IConfiguration configuration)
@@ -58,7 +58,7 @@ namespace WishBusinessAPI.Repositories.Account
                     if (Convert.ToString(cmd.Parameters["PCODE"].Value) == "00" || Convert.ToString(cmd.Parameters["PCODE"].Value) == "0")
                     {
                         isSuccess = true;
-                        // tranCode = TranCodes.Success;
+                        tranCode = TranCodes.Success;
                         Message = Convert.ToString(cmd.Parameters["PDESC"].Value);
                     }
                     else
@@ -76,7 +76,7 @@ namespace WishBusinessAPI.Repositories.Account
                 if (conn != null) { conn.Close(); conn.Dispose(); }
             }
 
-            return new GetUserResponse { isSuccess = isSuccess, Message = Message };
+            return new GetUserResponse { isSuccess = isSuccess, Message = Message, tranCodes = tranCode };
         }
     }
 }
