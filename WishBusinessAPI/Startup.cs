@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using WishBusinessAPI.Repositories.Account;
 using WishBusinessAPI.Repositories.Invitation;
 using WishBusinessAPI.Repositories.Payment;
+using WishBusinessAPI.Repositories.Recharge;
 using WishBusinessAPI.Repositories.UserRepository;
 
 namespace WishBusinessAPI
@@ -37,6 +38,8 @@ namespace WishBusinessAPI
             services.AddSingleton<IFinanceRepository, FinanceRepository>();
             services.AddSingleton<IPaymentRepository, PaymentRepository>();
             services.AddSingleton<IInvitationRepository, InvitationRepository>();
+            services.AddSingleton<IRechargeRepository, RechargeRepository>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WishBusinessAPI", Version = "v1" });
